@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"net/http"
 
+	_ "github.com/lib/pq"
+
 	"post-comment-service/internal/adapters/repositories/postgres"
 	"post-comment-service/internal/adapters/repositories/router"
 	"post-comment-service/internal/application"
@@ -28,6 +30,8 @@ func main() {
 	if err := db.Ping(); err != nil {
 		logger.Error.Fatalf("Failed to ping database: %v", err)
 	}
+
+	logger.Info.Printf("Successfully connected to the database")
 
 	postRepo := postgres.NewPostRepository(db)
 	commentRepo := postgres.NewCommentRepository(db)

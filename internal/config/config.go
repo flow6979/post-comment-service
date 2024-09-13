@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	"post-comment-service/internal/ports"
-	"post-comment-service/pkg/logger"
 
 	"github.com/spf13/viper"
 )
@@ -48,7 +47,13 @@ func Load() (*Config, error) {
 		JWTSecret:     viper.GetString("jwt.secret"),
 	}
 
-	logger.Info.Printf("Loaded configuration: %+v\n", cfg)
+	// logger.Info.Printf("Loaded configuration:\n"+
+	// 	"ServerAddress: %s\n"+
+	// 	"DatabaseURL: %s\n"+
+	// 	"JWTSecret: %s\n",
+	// 	cfg.ServerAddress,
+	// 	cfg.DatabaseURL,
+	// 	cfg.JWTSecret)
 
 	return cfg, nil
 }
