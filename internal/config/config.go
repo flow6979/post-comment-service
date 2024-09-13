@@ -1,7 +1,12 @@
 package config
 
 import (
+	"fmt"
+	"os"
+	"path/filepath"
+
 	"post-comment-service/internal/ports"
+	"post-comment-service/pkg/logger"
 
 	"github.com/spf13/viper"
 )
@@ -15,13 +20,26 @@ type Config struct {
 }
 
 func Load() (*Config, error) {
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
-	viper.AddConfigPath("./config")
+
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("error getting current directory: %w", err)
+	}
+
+	// path construction
+	configPath := filepath.Join(currentDir, "internal", "config", "config.yaml")
+
+	// path validation
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		return nil, fmt.Errorf("config file not found at %s", configPath)
+	}
+
+	fmt.Printf("Using config file: %s\n", configPath)
+
+	viper.SetConfigFile(configPath)
 
 	if err := viper.ReadInConfig(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error reading config file: %w", err)
 	}
 
 	cfg := &Config{
@@ -29,6 +47,8 @@ func Load() (*Config, error) {
 		DatabaseURL:   viper.GetString("database.url"),
 		JWTSecret:     viper.GetString("jwt.secret"),
 	}
+
+	logger.Info.Printf("Loaded configuration: %+v\n", cfg)
 
 	return cfg, nil
 }
