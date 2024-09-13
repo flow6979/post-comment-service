@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"log"
 	"net/http"
 
 	"post-comment-service/internal/adapters/repositories/postgres"
@@ -13,19 +12,21 @@ import (
 )
 
 func main() {
+	logger.Info.Printf("Starting things up for you boi !!")
+
 	cfg, err := config.Load()
 	if err != nil {
-		log.Fatalf("Failed to load configuration: %v", err)
+		logger.Error.Fatalf("Failed to load configuration: %v", err)
 	}
 
 	db, err := sql.Open("postgres", cfg.DatabaseURL)
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		logger.Error.Fatalf("Failed to connect to database: %v", err)
 	}
 	defer db.Close()
 
 	if err := db.Ping(); err != nil {
-		log.Fatalf("Failed to ping database: %v", err)
+		logger.Error.Fatalf("Failed to ping database: %v", err)
 	}
 
 	postRepo := postgres.NewPostRepository(db)
