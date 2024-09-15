@@ -10,28 +10,50 @@ This markdown file provides a detailed explanation of the project structure, com
 post-comment-service/
 │
 ├── cmd/
-│   └── main.go
+│ └── main.go
+| └── run_migrations.go
 │
 ├── internal/
-│   ├── adapters/
-│   │   ├── repositories/
-│   │   │   ├── http/
-│   │   │   ├── postgres/
-│   │   │   └── router/
-│   │   └── ...
-│   ├── application/
-│   ├── config/
-│   ├── domain/
-│   └── ports/
+│ ├── adapters/
+│ │ └── repositories/
+│ │   ├── http/
+│ │   │ ├── handlers.go
+│ │   │ └── user_handler.go
+│ │   ├── postgres/
+│ │   │ ├── comment_repository.go
+│ │   │ ├── post_repository.go
+│ │   │ └── user_repository.go
+│ │   └── router/
+│ │   └── router.go
+│ │ 
+│ ├── application/
+│ │ └── service.go
+│ ├── config/
+│ │ ├── config.go
+│ │ └── config.yaml
+│ ├── domain/
+│ │ └── models.go
+│ └── ports/
+│ └── ports.go
 │
 ├── migrations/
+│ ├── 000001_create_users.up.sql
+│ ├── 000001_create_users.down.sql
+│ ├── 000002_create_posts.up.sql
+│ ├── 000002_create_posts.down.sql
+│ ├── 000003_create_comments.up.sql
+│ └── 000003_create_comments.down.sql
 │
 ├── pkg/
-│   ├── errors/
-│   ├── logger/
-│   └── middleware/
+│ ├── errors/
+│ │ └── errors.go
+│ ├── logger/
+│ │ └── logger.go
+│ └── middleware/
+│ └── auth.go
 │
 ├── tools/
+│ └── create_migration.go
 │
 ├── go.mod
 ├── go.sum
