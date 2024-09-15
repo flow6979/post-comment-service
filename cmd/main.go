@@ -4,9 +4,10 @@ import (
 	"database/sql"
 	"net/http"
 
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 
-	"post-comment-service/internal/adapters/repositories/postgres"
+	"post-comment-service/internal/adapters/repositories/repos"
 	"post-comment-service/internal/adapters/repositories/router"
 	"post-comment-service/internal/application"
 	"post-comment-service/internal/config"
@@ -33,9 +34,14 @@ func main() {
 
 	logger.Info.Printf("Successfully connected to the database")
 
-	postRepo := postgres.NewPostRepository(db)
-	commentRepo := postgres.NewCommentRepository(db)
-	userRepo := postgres.NewUserRepository(db)
+	// Run migrations
+	if err := runMigrations(db); err != nil {
+		logger.Error.Fatalf("Failed to run migrations: %v", err)
+	}
+
+	postRepo := repos.NewPostRepository(db)
+	commentRepo := repos.NewCommentRepository(db)
+	userRepo := repos.NewUserRepository(db)
 
 	postService := application.NewPostService(postRepo, commentRepo)
 	userService := application.NewUserService(userRepo)
